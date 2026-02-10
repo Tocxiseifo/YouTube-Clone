@@ -6,6 +6,12 @@ interface Video {
         thumbnails: {
         standard?: {
             url: string
+        },
+        medium?: {
+            url: string
+        }
+        high?: {
+            url: string
         }
     },
     title:string,
@@ -13,26 +19,23 @@ interface Video {
     // Date:string
 }
 
-export default function VideoCard({video}: {video?: Video}) {   
-    // const now = new Date().getTime();
- 
+export default function VideoCard({video}: {video?: Video}) {    
     //====================Handlers=====================
     function HandleVideoLink(Id:string) {
         console.log("Navigate to video:", Id);
     }
-    if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-60 h-40 rounded-md" />
+    if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-140  rounded-md" />
 
 
 
     return(
         <>
-            <div className="w-140">
-               <Link to={'/'}>
+            <div className="w-130  hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">
+               <Link to={'/'} className="bg-transparent">
                     <img src={video.thumbnails?.standard?.url} className="rounded-md" alt={video.title} onClick={() => HandleVideoLink(video.id)} />
                </Link>
-                <h2 className="mt-2 font-semibold text-white">{video.title}</h2>
-                <Link to={'/'} className="mt-2 font-semibold text-white" >{video.channelTitle}</Link>
-                {/* <h2>{Number(video.Date) - now}</h2> */}
+                <h2 className="mt-2 font-semibold text-white ">{video.title}</h2>
+                <Link to={'/'} className="mt-2 font-semibold text-white ">{video.channelTitle}</Link>
             </div>
         </>
     )

@@ -6,7 +6,6 @@ export default function AppRouters() {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/videos/:id" element={<Home />} />
-
         </Routes>
     )
 }
