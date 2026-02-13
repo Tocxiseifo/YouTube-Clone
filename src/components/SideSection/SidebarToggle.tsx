@@ -6,7 +6,7 @@ export function SidebarToggle() {
   return (
     <button
       className="p-2 "
-      onClick={() => setOpen(!open)}
+      onClick={() => setOpen(open)}
     >
       <Menu className="w-6 h-6" />
     </button>

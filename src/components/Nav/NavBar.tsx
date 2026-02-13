@@ -40,7 +40,7 @@ export default function NavBar() {
             <div className="w-full h-18 flex flex-row">
                 <div className="flex w-[95%] h-18 flex-row justify-between items-center ">
                    <div className='flex flex-row justify-center gap-4'>
-                    <button onClick={() => setOpen(!open)} className='mt-4 w-12 h-10 cursor-pointer hover:bg-white/30 duration-300 transition-all hover:duration-300 text-center flex justify-center items-center rounded-full'>
+                    <button onClick={() => setOpen?.(!open)} className='mt-4 w-12 h-10 cursor-pointer hover:bg-white/30 duration-300 transition-all hover:duration-300 text-center flex justify-center items-center rounded-full'>
                         <IoMdMenu color="white" size={25} />
                     </button>
                     <Link to="/" className="w-15 h-18 ml-5  text-white flex justify-center items-center">

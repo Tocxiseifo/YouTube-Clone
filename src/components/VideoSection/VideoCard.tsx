@@ -1,38 +1,21 @@
 import { Skeleton } from "@/components/ui/skeleton"
 import { Link } from "react-router";
 
-interface Video {
-    id:string,
-        thumbnails: {
-        standard?: {
-            url: string
-        },
-        medium?: {
-            url: string
-        }
-        high?: {
-            url: string
-        }
-    },
-    title:string,
-    channelTitle:string
-    // Date:string
-}
+//===================Types=================
+import type Video from '@/Types/Videos'
 
-export default function VideoCard({video}: {video?: Video}) {    
+
+export default function VideoCard({video , width}: {video?: Video , width?: number | string}) {    
     //====================Handlers=====================
-    function HandleVideoLink(Id:string) {
-        console.log("Navigate to video:", Id);
-    }
     if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-140  rounded-md" />
 
 
-
+    // const Width = 'w-130'
     return(
         <>
-            <div className="w-130  hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">
-               <Link to={'/'} className="bg-transparent">
-                    <img src={video.thumbnails?.standard?.url} className="rounded-md" alt={video.title} onClick={() => HandleVideoLink(video.id)} />
+            <div  className="w-130 hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">
+               <Link to={`videos/${video.id}`} className="bg-transparent">
+                    <img src={video.thumbnails?.standard?.url} className="rounded-md" alt={video.title}/>
                </Link>
                 <h2 className="mt-2 font-semibold text-white ">{video.title}</h2>
                 <Link to={'/'} className="mt-2 font-semibold text-white ">{video.channelTitle}</Link>

@@ -1,6 +1,7 @@
 // import { AppSidebar } from "@/components/SideSection/SideSection";
 import VideoCard from "@/components/VideoSection/VideoCard";
 import useVideos from "@/Hooks/useVideos";
+import { AppSidebar } from "@/components/SideSection/SideSection";
 
 
 export default function Home() {
@@ -10,6 +11,9 @@ export default function Home() {
     if(error) return <div>Error: {error}</div>
     return(
         <div className="w-full flex-row flex-wrap justify-center gap-12 mx-auto px-4 mt-4">
+              <div className='fixed top-0 '>
+                    <AppSidebar />
+                </div>
             <div className='w-full ml-25 flex flex-wrap justify-center gap-4 mx-auto px-4  mt-4'>
                 {videos.map(video => (
                     <VideoCard key={video.id} video={video} />
