@@ -5,9 +5,9 @@ import { Link } from "react-router";
 import type Video from '@/Types/Videos'
 
 
-export default function VideoCard({video , width}: {video?: Video , width?: number | string}) {    
+export default function VideoCard({video}: {video?: Video}) {    
     //====================Handlers=====================
-    if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-140  rounded-md" />
+    if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-130  rounded-md" />
 
 
     // const Width = 'w-130'

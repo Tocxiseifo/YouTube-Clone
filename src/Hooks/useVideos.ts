@@ -17,6 +17,6 @@ export default function useVideos() {
             setLoading(false)
         })
     },[])
-    console.log(videos);
+    // console.log(videos);
     return {videos, loading, error}
 }

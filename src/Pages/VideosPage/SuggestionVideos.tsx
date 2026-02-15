@@ -25,7 +25,7 @@ export default function SuggestionVideos() {
                         // navigate("/videos/xyz") ✅ => /videos/xyz
                     */}
                     <Link to={`/videos/${video.id}`}   className="bg-transparent">  
-                        <img src={video.thumbnails?.default?.url} className="rounded-md" alt={video.title}/>
+                        <img src={video.thumbnails?.medium?.url} className="rounded-md w-45" alt={video.title}/>
                     </Link>
                     <div className="flex flex-col ">
                         <h2 className=" font-semibold text-white ">{video.title}</h2>
