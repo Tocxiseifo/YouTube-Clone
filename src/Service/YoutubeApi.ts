@@ -1,10 +1,11 @@
+import type Video from "@/Types/Videos"
 import axios from "axios"
 
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY
 const BASE_URL = "https://www.googleapis.com/youtube/v3"
 
 
-export default async function fetchPopularVideos() {
+export default async function fetchPopularVideos() : Promise<Video[]> {
   const response = await axios.get(`${BASE_URL}/videos`, {
     params: {
       part: "snippet,statistics",
@@ -29,10 +30,10 @@ export default async function fetchPopularVideos() {
     thumbnails: item.snippet.thumbnails,
     channelUrl: `https://www.youtube.com/channel/${item.snippet.channelId}`,
     videoUrl: `https://www.youtube.com/watch?v=${item.id}`,
-    View: item.statistics.viewCount,
+    viewCount: item.statistics.viewCount,
     like: item.statistics.likeCount ?? 0,
     dislike: item.statistics.dislikeCount?? 0,
     comment: item.statistics.comment,
-    channelId: item.snippet.channelId,
+    channelId: item.snippet.channelId, 
   }))
 }
