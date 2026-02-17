@@ -2,58 +2,78 @@
 import { Skeleton } from "@/components/ui/skeleton"
 
 //=============Router==============
-import { Link, useParams } from "react-router";
+import { Link } from "react-router"; // شيلنا useParams لأنه مش محتاجينه في الكارت
 
 //===================Types=================
 import type Video from '@/Types/Videos'
 
 //=================Hooks=====================
 import { useEffect, useState } from "react";
-import useVideos from "@/Hooks/useVideos";
 import { fetchChannelsLogos } from "@/Service/fetchChannelsLogos";
 import { useFormatViews } from "@/Hooks/useformatViews";
 
+export default function VideoCard({ video }: { video?: Video }) {
+    
+    // 1. شيلنا useVideos عشان نمنع التكرار، إحنا بنعتمد على الـ prop video
+    const [channelLogo, setChannelLogo] = useState<string>(""); 
 
-
-export default function VideoCard({video}: {video?: Video}) {    
-    const {videos , loading , error} = useVideos()
-    const [channelLogos, setChannelLogos] = useState<Record<string, string>>({});
-    const param = useParams()
-    const videoId = param.id
-    const formattedViews = useFormatViews(video?.ViewCount);
+    // 2. تصحيح الوصول للـ ViewCount (تأكد من الـ Path ده في الـ Console)
+    // Youtube API standard: video.statistics.viewCount
+    // If you mapped it: video.viewCount
+    const rawViews = video?.statistics?.viewCount || video?.viewCount || 0; 
+    const formattedViews = useFormatViews(rawViews);
 
     useEffect(() => {
-      if (!videos.length) return;
+        if (!video?.channelId) return;
 
-      const channelIds = videos
-        .map(v => v.channelId)
-        .join(",");
+        // بنجيب اللوجو للقناة دي بس
+        fetchChannelsLogos(video.channelId).then((logos) => {
+            // مفترض الدالة دي بترجع object فيه id: url
+            if(logos && logos[video.channelId]) {
+                setChannelLogo(logos[video.channelId]);
+            }
+        });
 
-      fetchChannelsLogos(channelIds).then(setChannelLogos);
+    }, [video?.channelId]);
 
-    }, [videos]);
+    // Validation
+    if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-130 h-72 rounded-md" />
 
-    
-    if (loading) return <h1>Loading...</h1>
-    if (error) return <h1>{error}</h1>
-    if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-130  rounded-md" />
-    console.log('view:',video.ViewCount);
+    // // Debugging: بص هنا في الكونسول عشان تتأكد الاسم صح
+    // console.log('Stats Object:', video.statistics); 
+    // console.log('Raw Views:', rawViews);
 
-    return(
-        <>
-            <div className="w-130 hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">
-               <Link to={`videos/${video.id}`} className="bg-transparent">
-                    <img src={video.thumbnails?.standard?.url} className="rounded-md " alt={video.title}/>
-               </Link>
-                <div className="flex w-full ">{channelLogos[video.channelId] ? (  <img src={channelLogos[video.channelId]} className="h-12 w-12 rounded-full mr-3 mt-2" alt="channel logo"/>) : (  <Skeleton className="h-12 w-12 rounded-full mr-3 mt-2" />)}                    <div className="flex flex-col items-start w-full   ">
-                        <h2 className="mt-2 mb-4 font-semibold text-white ">{video.title}</h2>
-                        <div className="w-full flex-col flex items-start text-start ">
-                            <Link to={'/'} className=" font-semibold text-gray-400  duration-300 transition-all hover:text-white hover:duration-300 ">{video.channelTitle}</Link>
-                            {/* <p className="text-lg text-white">{formattedViews} views</p> */}
-                        </div>
+    return (
+        <div className="w-130 hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">
+            <Link to={`/videos/${video.id}`} className="bg-transparent">
+                <img src={video.thumbnails?.standard?.url} className="rounded-md w-full" alt={video.title} />
+            </Link>
+            
+            <div className="flex w-full mt-3">
+                {/* Channel Logo */}
+                {channelLogo ? (
+                    <img src={channelLogo} className="h-12 w-12 rounded-full mr-3" alt="channel logo" />
+                ) : (
+                    <Skeleton className="h-12 w-12 rounded-full mr-3" />
+                )}
+
+                <div className="flex flex-col items-start w-full">
+                    <h2 className="font-semibold text-white line-clamp-2">{video.title}</h2>
+                    <div className="w-full flex flex-col items-start text-start mt-1">
+                        <Link 
+                            to={'/'} 
+                            className="text-sm font-semibold text-gray-400 duration-300 transition-all hover:text-white hover:duration-300"
+                        >
+                            {video.channelTitle}
+                        </Link>
+                        
+                        {/* 3. هنا عرض المشاهدات بعد التصليح */}
+                        <p className="text-sm text-gray-400 mt-1">
+                            {formattedViews} views
+                        </p>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }

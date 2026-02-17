@@ -1,5 +1,5 @@
 export default interface Video {
-    channelId: any
+    channelId: string
     id:string,
     thumbnails: {
         standard?: {
@@ -14,6 +14,7 @@ export default interface Video {
     },
     title:string,
     channelTitle:string
-    ViewCount?:string | number
-    // Date:st  ring
+    viewCount?:string | number
+    like?:string | number
+    dislike?:string | number
 }
