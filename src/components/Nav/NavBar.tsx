@@ -5,7 +5,6 @@ import Category from "../Categarys/Categarys";
 import { CiSearch } from "react-icons/ci";
 import { IoMicOutline } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
-import { IoMdMenu } from "react-icons/io";
 //================Shadcn UI============
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
@@ -28,21 +27,23 @@ import { useContext, useState } from 'react'
 //=============Router=============
 import { Link } from "react-router";
 import { Context } from '@/Context/Context';
+import MenuDrawer from '../SideSection/SideSection';
+// import MenuDrawer from '../SideSection/SideSection';
 
 export default function NavBar() {
     const [search ,SetSearch] = useState<string>('')
     const context = useContext(Context)
+    const [open, setOpen] = useState<boolean>(() =>{
+      return localStorage.getItem('sidebarOpen') === 'true' ? true : false
+    })
+    
     if(!context) return null
-
-    const {open , setOpen} = context    
     return(
         <nav className="w-full h-32 flex flex-col bg-main-backGround/95 justify-center items-center text-center backdrop-blur-sm border  border-transparent  p-8   sticky top-0 z-50">
             <div className="w-full h-18 flex flex-row">
                 <div className="flex w-[95%] h-18 flex-row justify-between items-center ">
-                   <div className='flex flex-row justify-center gap-4'>
-                    <button onClick={() => setOpen?.(!open)} className='mt-4 w-12 h-10 cursor-pointer hover:bg-white/30 duration-300 transition-all hover:duration-300 text-center flex justify-center items-center rounded-full'>
-                        <IoMdMenu color="white" size={25} />
-                    </button>
+                   <div className='flex flex-row justify-center gap-4 bg-transparent'>
+                    <MenuDrawer setOpenDrawer={setOpen} openDrawer={open} /> 
                     <Link to="/" className="w-15 h-18 ml-5  text-white flex justify-center items-center">
                         <img src={logo} alt="" className='w-15 h-15' /> 
                         <span className='text-[20px] relative xl:right-2.5 bottom-0.5  font-bold'>YouTube</span>

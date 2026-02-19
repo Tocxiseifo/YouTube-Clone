@@ -1,68 +1,72 @@
-import { useSidebar } from "@/components/ui/sidebar"
-import { Home, Video, Settings, Clock } from "lucide-react" // أي icons
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+// import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import { Download, HistoryIcon, HomeIcon, Menu, Settings } from 'lucide-react';
+import { useState } from 'react';
+import { MdPlaylistPlay } from "react-icons/md";
+import { MdOutlineWatchLater } from "react-icons/md";
+import { SlLike } from 'react-icons/sl';
 
-export function AppSidebar() {
-  const { open , setOpen } = useSidebar()
+export default function MenuDrawer({openDrawer , setOpenDrawer}: {openDrawer?:boolean , setOpenDrawer?: (open: boolean) => void}) {
+  const [open, setOpen] = useState(openDrawer);
+  
 
-  const navItems = [
-    { label: "Home", icon: Home },
-    { label: "Shorts", icon: Video },
-    { label: "Subscriptions", icon: Clock },
-  ]
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpen(newOpen);
+    setOpenDrawer?.(newOpen);
+  };
 
-  const libraryItems = [
-    { label: "Library", icon: Video },
-    { label: "History", icon: Clock },
-    { label: "Watch Later", icon: Clock },
-  ]
+  const DrawerList = (
+    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)} className='bg-main-backGround h-full text-white'>
+      <List className='flex flex-col gap-4'>
+        <div className=' h-12  flex items-center justify-start gap-4 px-4 rounded-md cursor-pointer hover:bg-white/10 transition-all duration-300 hover:duration-300 w-60 '>
+          <HomeIcon size={25} />
+          <span className='text-[16px] font-medium'>Home</span>
+        </div>
+        <div className=' h-12  flex items-center justify-start gap-4 px-4 rounded-md cursor-pointer hover:bg-white/10 transition-all duration-300 hover:duration-300 w-60 '>
+          <HistoryIcon size={25} />
+          <span className='text-[16px] font-medium'>History</span>
+        </div>
+        <div className=' h-12  flex items-center justify-start gap-4 px-4 rounded-md cursor-pointer hover:bg-white/10 transition-all duration-300 hover:duration-300 w-60 '>
+          <MdPlaylistPlay size={25} />
+          <span className='text-[16px] font-medium'>Playlists</span>
+        </div>
+        <div className=' h-12  flex items-center justify-start gap-4 px-4 rounded-md cursor-pointer hover:bg-white/10 transition-all duration-300 hover:duration-300 w-60 '>
+          <MdOutlineWatchLater size={25} />
+          <span className='text-[16px] font-medium'>Watch Later</span>
+        </div>
+        <div className=' h-12  flex items-center justify-start gap-4 px-4 rounded-md cursor-pointer hover:bg-white/10 transition-all duration-300 hover:duration-300 w-60 '>
+          <SlLike size={25} />
+          <span className='text-[16px] font-medium'>Liked Videos</span>
+        </div>
+        <div className=' h-12  flex items-center justify-start gap-4 px-4 rounded-md cursor-pointer hover:bg-white/10 transition-all duration-300 hover:duration-300 w-60 '>
+          <Download size={25} />
+          <span className='text-[16px] font-medium'>Downloads</span>
+        </div>
+        <div className='h-12  flex items-center justify-start gap-4 px-4 rounded-md cursor-pointer hover:bg-white/10 transition-all duration-300 hover:duration-300 w-60 '>
+          <Settings size={25} />
+          <span className='text-[16px] font-medium'>Settings</span>
+        </div>
+      </List>
+    </Box>
+  );
 
   return (
-    <aside
-      className={`bg-main-backGround border-r  border-main-backGround dark:border-gray-800
-       h-screen w-48 p-4 flex flex-col pt-35  transition-transform duration-300 text-white
-        ${open ? "translate-x-0 hidden" : "-translate-x-full flex"} md:translate-x-0 fixed md:static`}
-    >
-      {/* Header / Logo
-      <div className="mb-6">
-        <h1 className="text-xl font-bold">YouTube Clone</h1>
-      </div> */}
-
-      {/* Navigation */}
-      <nav className="flex flex-col gap-2">
-        {navItems.map((item) => (
-          <button
-            key={item.label}
-            className="flex items-center cursor-pointer gap-3 p-2 hover:bg-white/30 duration-300 transition-all hover:duration-300 rounded-md "
-          >
-            <item.icon className="w-5 h-5" />
-            <span>{item.label}</span>
-          </button>
-        ))}
-      </nav>
-
-      {/* Divider */}
-      <hr className="my-4 border-gray-200 dark:border-gray-800" />
-
-      {/* Library */}
-      <nav className="flex flex-col gap-2 cursor-pointer">
-        {libraryItems.map((item) => (
-          <button
-            key={item.label}
-            className="flex items-center gap-3 p-2 hover:bg-white/30 duration-300 transition-all hover:duration-300 rounded-md "
-          >
-            <item.icon className="w-5 h-5 " />
-            <span>{item.label}</span>
-          </button>
-        ))}
-      </nav>
-
-      {/* Footer / Settings */}
-      <div className="mt-auto">
-        <button className="flex items-center gap-3 p-2 hover:bg-white/30 duration-300 transition-all hover:duration-300 rounded-md ">
-          <Settings className="w-5 h-5" />
-          <span>Settings</span>
-        </button>
-      </div>
-    </aside>
-  )
+    <div>
+      <button onClick={toggleDrawer(true)}  className='mt-3.5 w-12 h-10 cursor-pointer hover:bg-white/30 duration-300 transition-all hover:duration-300 text-center flex justify-center items-center rounded-full'>
+        <Menu className=' duration-300 transition-all hover:duration-300 items-center text-white mt-1 ' />
+      </button>
+      <Drawer open={open} onClose={toggleDrawer(false)}>
+        {DrawerList}
+      </Drawer>
+    </div>
+  );
 }

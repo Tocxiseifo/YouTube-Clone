@@ -21,20 +21,32 @@ import { SlDislike } from "react-icons/sl";
 import { TbShare3 } from "react-icons/tb";
 import { HiDownload } from "react-icons/hi";
 import { CiBookmark } from "react-icons/ci";
+import fetchSubscribeCount from "@/Service/fetchSubscribeCount";
 
 
 export default function VideoPlayer() {
+    //====================States======================
     const [open, setOpen] = useState<boolean>(false)
-
-    const {videos , loading , error} = useVideos()  // بنجيب كل الفيديوهات عشان نقدر نفلتر ونجيب الفيديو الحالي بناءً على الـ ID من الـ URL
-    const param = useParams()
-    const videoId = param.id
-    
-    const currentVideo = videos.find(v => v.id === videoId);
-    const channelId = currentVideo?.channelId;
     const [channelLogo, setChannelLogo] = useState<string>();
-    const formattedViews = useFormatViews(currentVideo?.viewCount); // Assuming viewCount is directly on the video object, adjust if it's nested under statistics
+    const [subscriberCount, setSubscriberCount] = useState<number>(0);
+    const {videos , loading , error} = useVideos()  // بنجيب كل الفيديوهات عشان نقدر نفلتر ونجيب الفيديو الحالي بناءً على الـ ID من الـ URL
+    const formattedSubCount = useFormatViews(subscriberCount); // Assuming subscriber count is directly on the video object, adjust if it's nested under statistics
+    const param = useParams()
+    
+    
+    const videoId = param.id
+    const currentVideo = videos.find(v => v.id === videoId);
     const formattedLikes = useFormatViews(currentVideo?.like); // Assuming like count is directly on the video object, adjust if it's nested under statistics
+    const formattedViews = useFormatViews(currentVideo?.viewCount); // Assuming viewCount is directly on the video object, adjust if it's nested under statistics
+    const channelId = currentVideo?.channelId;
+
+    //=====================Effects======================
+    useEffect(() => {
+        fetchSubscribeCount(channelId || "").then(count => {
+        console.log("Fetched Subscriber Count:", count);
+        setSubscriberCount(count);
+    })
+    },[channelId])
     
     useEffect(() => {
       if (!channelId) return;
@@ -42,7 +54,8 @@ export default function VideoPlayer() {
         setChannelLogo(logo);
       });
     }, [channelId]);
-
+    console.log(videoId);
+    
     if (loading) return <h1>Loading...</h1>
     if (error) return <h1>{error}</h1>
 
@@ -58,7 +71,10 @@ export default function VideoPlayer() {
                                 <div className=" flex  items-center justify-between w-full  gap-2">
                                     <div className="flex gap-2 items-center ">
                                         <img  src={channelLogo} alt="channel logo" className="rounded-[50%] h-10 w-10 mt-2 object-cover" />
-                                        <p className="text-white mt-2 w-35 text-[16px]">{currentVideo.channelTitle}</p>
+                                        <div className="flex flex-col ">
+                                            <p className="text-white mt-2 w-35 text-[16px]">{currentVideo.channelTitle}</p>
+                                            <p className="text-gray-400 text-sm">{formattedSubCount} subscribers</p>
+                                        </div>
                                     </div>
                                     <div className="flex items-center justify-between gap-4 w-full mt-2">
                                         <div className="flex   items-center gap-3 w-45">

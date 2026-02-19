@@ -34,6 +34,7 @@ export default async function fetchPopularVideos() : Promise<Video[]> {
     like: item.statistics.likeCount ?? 0,
     dislike: item.statistics.dislikeCount?? 0,
     comment: item.statistics.comment,
-    channelId: item.snippet.channelId, 
+    channelId: item.snippet.channelId,
+    SubscriberCount: item.statistics.subscriberCount ?? 0
   }))
 }

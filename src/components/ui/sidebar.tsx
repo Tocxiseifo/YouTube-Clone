@@ -8,7 +8,7 @@ type SidebarContextType = {
 const SidebarContext = React.createContext<SidebarContextType | null>(null)
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = React.useState(false) // Desktop open by default
+  const [open, setOpen] = React.useState(true) // Desktop open by default
   return (
     <SidebarContext.Provider value={{ open, setOpen }}>
       {children}
