@@ -25,7 +25,7 @@ export default function VideoCard({ video }: { video?: Video }) {
 
     useEffect(() => {
         if (!video?.channelId) return;
-
+        
         // بنجيب اللوجو للقناة دي بس
         fetchChannelsLogos(video.channelId).then((logos) => {
             // مفترض الدالة دي بترجع object فيه id: url
@@ -37,16 +37,16 @@ export default function VideoCard({ video }: { video?: Video }) {
     }, [video?.channelId]);
 
     // Validation
-    if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-130 h-72 rounded-md" />
+    if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-150 h-auto  rounded-md" />
 
     // // Debugging: بص هنا في الكونسول عشان تتأكد الاسم صح
     // console.log('Stats Object:', video.statistics); 
     // console.log('Raw Views:', rawViews);
 
     return (
-        <div className="w-130 hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">
+        <div className="w-150 hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">
             <Link to={`/videos/${video.id}`} className="bg-transparent">
-                <img src={video.thumbnails?.standard?.url} className="rounded-md w-full" alt={video.title} />
+                <img src={video.thumbnails?.standard?.url} className="rounded-md w-full object-cover" alt={video.title} />
             </Link>
             
             <div className="flex w-full mt-3">

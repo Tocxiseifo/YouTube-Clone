@@ -1,7 +1,7 @@
 //=================Hooks=================
 import useVideos from "@/Hooks/useVideos";
 import { useParams } from "react-router";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useFormatViews } from "@/Hooks/useformatViews";
 
 //=================Shadcn UI=================
@@ -13,6 +13,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { ChevronDownIcon } from "lucide-react";
+
+//=================Components=================
+import DropdownMenuIcons from "@/components/ui/DropDown";
+
+//=================Services=================
 import { fetchChannelLogo } from "@/Service/LogoApiFetching";
 
 //=================React Icons=================
@@ -23,17 +28,28 @@ import { HiDownload } from "react-icons/hi";
 import { CiBookmark } from "react-icons/ci";
 import fetchSubscribeCount from "@/Service/fetchSubscribeCount";
 
+//===================Components==============
+import CommentSection from "./CommentSection";
+
+// import { Context } from "@/Context/Context";
+// import fetchComments from "@/Service/FetchComments";
+
+
 
 export default function VideoPlayer() {
     //====================States======================
     const [open, setOpen] = useState<boolean>(false)
     const [channelLogo, setChannelLogo] = useState<string>();
     const [subscriberCount, setSubscriberCount] = useState<number>(0);
+    
     const {videos , loading , error} = useVideos()  // بنجيب كل الفيديوهات عشان نقدر نفلتر ونجيب الفيديو الحالي بناءً على الـ ID من الـ URL
     const formattedSubCount = useFormatViews(subscriberCount); // Assuming subscriber count is directly on the video object, adjust if it's nested under statistics
     const param = useParams()
-    
-    
+
+    //=====================Context===================    
+    // const context = useContext(Context);
+    // // const {comment , SetComment } = context || {}
+        
     const videoId = param.id
     const currentVideo = videos.find(v => v.id === videoId);
     const formattedLikes = useFormatViews(currentVideo?.like); // Assuming like count is directly on the video object, adjust if it's nested under statistics
@@ -54,8 +70,8 @@ export default function VideoPlayer() {
         setChannelLogo(logo);
       });
     }, [channelId]);
-    console.log(videoId);
     
+    // if (!context) return null;
     if (loading) return <h1>Loading...</h1>
     if (error) return <h1>{error}</h1>
 
@@ -63,7 +79,7 @@ export default function VideoPlayer() {
         <>
             {videos.filter(video => video.id === videoId).map((video) => (
                 <div key={video.id} className="flex flex-col  text-start">
-                    <iframe  src={`https://www.youtube.com/embed/${video.id}`} frameBorder="0" height={720} width={1425} allowFullScreen className="aspect-video rounded-md " allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                    <iframe  src={`https://www.youtube.com/embed/${video.id}`} frameBorder="0" height={720} width={1525} allowFullScreen className="aspect-video rounded-md " allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
                     <div className="flex flex-col items-start text-start">
                         <div className="flex flex-col mt-2 text-start w-full">
                             <h1 className="text-white mt-2 text-2xl">{currentVideo.title}</h1>
@@ -72,7 +88,7 @@ export default function VideoPlayer() {
                                     <div className="flex gap-2 items-center ">
                                         <img  src={channelLogo} alt="channel logo" className="rounded-[50%] h-10 w-10 mt-2 object-cover" />
                                         <div className="flex flex-col ">
-                                            <p className="text-white mt-2 w-35 text-[16px]">{currentVideo.channelTitle}</p>
+                                            <p className="text-white mt-2 w-65 text-[16px]">{currentVideo.channelTitle}</p>
                                             <p className="text-gray-400 text-sm">{formattedSubCount} subscribers</p>
                                         </div>
                                     </div>
@@ -110,6 +126,7 @@ export default function VideoPlayer() {
                                                     Save
                                                 </button>
                                             </div>
+                                            <DropdownMenuIcons />
                                         </div>
                                     </div>
                                 </div>
@@ -129,19 +146,23 @@ export default function VideoPlayer() {
                                       <div className="w-240 text-gray-300">
                                        {currentVideo.description}
                                       </div>
-                                      {currentVideo.channelTitle}
-                                      {/* <Button size="xs">Learn More</Button> */}
+                                      {currentVideo.tags?.map((tag: string) => (
+                                        <div key={tag} className="text-gray-300">
+                                          {tag}
+                                        </div>
+                                      ))}
+                                      <div className="flex flex-row items-start text-start gap-4 ">
+                                        <img src={channelLogo} alt="channel logo" className="rounded-[50%] h-10 w-10 mt-2 object-cover" />
+                                        <div className="flex flex-col ">
+                                          <p className="text-white mt-2 w-35 text-[16px]">{currentVideo.channelTitle}</p>
+                                          <p className="text-gray-400 text-sm">{formattedSubCount} subscribers</p>
+                                        </div>
+                                      </div>
                                     </CollapsibleContent>
                                   </Collapsible>
                                 </CardContent>
                             </Card>
-                            {/* <div className="h-auto w-full flex flex-col gap-2">
-                                {videos.map((video) =>(
-                                    <div key={video.id} className="">
-                                        {video.comment}
-                                    </div>
-                                ))}
-                            </div> */}
+                            <CommentSection Id={video.id} />
                         </div>
                     </div>
                 </div>

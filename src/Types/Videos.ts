@@ -17,4 +17,5 @@ export default interface Video {
     viewCount?:string | number
     like?:string | number
     dislike?:string | number
+    comment?:string | number
 }

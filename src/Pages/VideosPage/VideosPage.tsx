@@ -9,7 +9,7 @@ export default function VideoPage() {
         <>
             <section className="flex ml-15 w-full h-auto  ">
                 <VideoPlayer  />
-                <SuggestionVideos />
+                <SuggestionVideos  />
             </section>
         </>
     )

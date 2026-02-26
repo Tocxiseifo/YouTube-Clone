@@ -1,5 +1,6 @@
 //===================Hooks==============
 import useVideos from "@/Hooks/useVideos"
+import { useFormatViews } from "@/Hooks/useformatViews"
 
 //===============Shadcn UI======================
 import { Skeleton } from "@/components/ui/skeleton"
@@ -13,7 +14,9 @@ export default function SuggestionVideos() {
     const {videos , loading , error} = useVideos()
     const param = useParams()
     const videoId = param.id
-    
+
+    const formatViews = useFormatViews;
+
     if (loading) return <h1>Loading...</h1>
     if (error) return <h1>{error}</h1>
 
@@ -35,9 +38,10 @@ export default function SuggestionVideos() {
                                 <Link to={`/videos/${video.id}`}   className="bg-transparent">  
                                     <img src={video.thumbnails?.medium?.url} className="rounded-md w-45" alt={video.title}/>
                                 </Link>
-                                <div className="flex flex-col ">
+                                <div className="flex flex-col">
                                     <h2 className=" font-semibold text-white ">{video.title}</h2>
                                     <Link to={'/'} className="mt-2 font-semibold text-sm text-gray-400 ">{video.channelTitle}</Link>
+                                    <p className="text-sm text-gray-400 mt-1">{formatViews(video.viewCount)} views</p>
                                 </div>
                             </div>
                        </div>

@@ -6,7 +6,6 @@ export default function useVideos() {
     const [videos, setVideos] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-
     useEffect(() => {
         fetchPopularVideos().then((data) => {
             setVideos(data)
@@ -18,5 +17,5 @@ export default function useVideos() {
         })
     },[])
     // console.log(videos);
-    return {videos, loading, error}
+    return {videos, loading, error }
 }

@@ -31,12 +31,20 @@ import MenuDrawer from '../SideSection/SideSection';
 // import MenuDrawer from '../SideSection/SideSection';
 
 export default function NavBar() {
-    const [search ,SetSearch] = useState<string>('')
     const context = useContext(Context)
+    const {search ,setSearch} = context || {}
     const [open, setOpen] = useState<boolean>(() =>{
       return localStorage.getItem('sidebarOpen') === 'true' ? true : false
     })
-    
+
+    // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) =>{
+    //     e.preventDefault()
+    //     if (searchResults) {
+    //         navigation(`/search?q=${search}`)
+    //     }
+    //     console.log(searchResults);
+        
+    // }
     if(!context) return null
     return(
         <nav className="w-full h-32 flex flex-col bg-main-backGround/95 justify-center items-center text-center backdrop-blur-sm border  border-transparent  p-8   sticky top-0 z-50">
@@ -51,10 +59,10 @@ export default function NavBar() {
                     </div>
                     <div className='flex items-center justify-between w-120 h-5'>
                         <span className='w-150 h-10 flex justify-between items-center gap focus:outline-none '>
-                            <input type="text" id="" className='w-150 border-2 border-white/10 focus:outline-blue-500 focus:border  rounded-l-full rounded-r-none h-12 bg-main-backGround  text-white text-[14px] pl-5' value={search} onChange={e => SetSearch(e.target.value)} placeholder='Search' />
-                            <div className="bg-white/10  backdrop-blur-xl w-15 h-12  text-center flex justify-center items-center rounded-l-none rounded-r-full">
+                            <input type="text" id="" className='w-150 border-2 border-white/10 focus:outline-blue-500 focus:border  rounded-l-full rounded-r-none h-12 bg-main-backGround  text-white text-[14px] pl-5' value={search} onChange={e => setSearch?.(e.target.value)} placeholder='Search' />
+                            <Link to={`/search/${search}`} className="bg-white/10  backdrop-blur-xl w-15 h-12  text-center flex justify-center items-center rounded-l-none rounded-r-full" >
                                 <CiSearch   color="white" size={22}/>    
-                            </div>
+                            </Link>
                             <div className="bg-white/10 ml-2  backdrop-blur-xl w-15 h-12 cursor-pointer hover:bg-white/30 duration-300 transition-all hover:duration-300 text-center flex justify-center items-center rounded-full">
                                 <IoMicOutline color="white" size={22}/>
                             </div>
