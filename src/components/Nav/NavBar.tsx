@@ -37,14 +37,7 @@ export default function NavBar() {
       return localStorage.getItem('sidebarOpen') === 'true' ? true : false
     })
 
-    // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) =>{
-    //     e.preventDefault()
-    //     if (searchResults) {
-    //         navigation(`/search?q=${search}`)
-    //     }
-    //     console.log(searchResults);
-        
-    // }
+
     if(!context) return null
     return(
         <nav className="w-full h-32 flex flex-col bg-main-backGround/95 justify-center items-center text-center backdrop-blur-sm border  border-transparent  p-8   sticky top-0 z-50">

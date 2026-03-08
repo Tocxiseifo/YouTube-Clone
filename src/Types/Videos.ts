@@ -15,7 +15,9 @@ export default interface Video {
     title:string,
     channelTitle:string
     viewCount?:string | number
-    like?:string | number
+    like:string | number
     dislike?:string | number
     comment?:string | number
+    tag:string[]
+    description:string
 }

@@ -17,7 +17,6 @@ export default function VideoCard({ video }: { video?: Video }) {
     // 1. شيلنا useVideos عشان نمنع التكرار، إحنا بنعتمد على الـ prop video
     const [channelLogo, setChannelLogo] = useState<string>(""); 
 
-    // 2. تصحيح الوصول للـ ViewCount (تأكد من الـ Path ده في الـ Console)
     // Youtube API standard: video.statistics.viewCount
     // If you mapped it: video.viewCount
     const rawViews = video?.statistics?.viewCount || video?.viewCount || 0; 
@@ -33,16 +32,11 @@ export default function VideoCard({ video }: { video?: Video }) {
                 setChannelLogo(logos[video.channelId]);
             }
         });
-
     }, [video?.channelId]);
-
+    
+    
     // Validation
     if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-150 h-auto  rounded-md" />
-
-    // // Debugging: بص هنا في الكونسول عشان تتأكد الاسم صح
-    // console.log('Stats Object:', video.statistics); 
-    // console.log('Raw Views:', rawViews);
-
     return (
         <div className="w-150 hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">
             <Link to={`/videos/${video.id}`} className="bg-transparent">

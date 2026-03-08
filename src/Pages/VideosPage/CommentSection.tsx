@@ -38,7 +38,6 @@ export default function CommentSection({Id}: {Id?: string}) {
     
 
 
-    //=====================Effect============
     useEffect(() => {
         localStorage.setItem(
           `comments-${videoId}`,
@@ -46,6 +45,7 @@ export default function CommentSection({Id}: {Id?: string}) {
         );
     }, [commentsList, videoId]);
 
+    
     //==============Context===========
     const context = useContext(Context)
     if (!context) return null;
@@ -55,7 +55,6 @@ export default function CommentSection({Id}: {Id?: string}) {
     const handleCommentSubmit = () => {
         if (commentInput.trim() === "") return;
     
-        // بنعمل كائن جديد للكومنت (ممكن تضيف له اسمك وصورتك)
         const newComment = {
             id: Date.now(),
             author: "You",
@@ -65,15 +64,13 @@ export default function CommentSection({Id}: {Id?: string}) {
             LikeCount: like,
         };
     
-        // إضافة الكومنت الجديد في أول القائمة
         SetCommentsList([newComment, ...(Array.isArray(commentsList) ? commentsList : [])]); 
         localStorage.setItem(
             `comments-${videoId}`,
             JSON.stringify(newComment)
           );
-        // تنظيف المدخلات
         SetCommentInput("");
-        SetCommentBtn(false); // إخفاء الزرار بعد الإرسال لو حابب
+        SetCommentBtn(false); 
         // SetComment([newComment, ...(Array.isArray(comment) ? comment : [])]);
     };
    
@@ -118,7 +115,6 @@ export default function CommentSection({Id}: {Id?: string}) {
                     <div className="flex flex-col items-end justify-end  w-full h-auto gap-4">
                         <input className="w-full mt-10 border-b-gray-500 duration-300 transition-all focus:border-b-zinc-300 border-2 border-transparent text-zinc-200  text-lg  focus:outline-none" placeholder="Add a comment..." type="text" onChange={(e) => SetCommentInput(e.target.value)} onFocus={handleInputFocus}  value={commentInput} />
                         {commentBtn && (
-                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                             <button className={commentInput.length === 0 ? ' w-28 h-10 rounded-full bg-white/10  text-gray-600': 'w-28 cursor-pointer h-10 rounded-full bg-blue-500 text-black'} disabled={commentInput.length === 0} onClick={handleCommentSubmit}>Comment</button>
                         )}
                     </div>

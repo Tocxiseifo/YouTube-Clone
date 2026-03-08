@@ -14,8 +14,7 @@ import { BsHeart } from "react-icons/bs";
 
 
 export default function DropdownMenuIcons() {
-  return (
-    <DropdownMenu >
+  return (<DropdownMenu >
       <DropdownMenuTrigger asChild>
             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-xl cursor-pointer ">
                 <div className="flex font-bold cursor-pointer rounded-full items-center justify-center w-full h-full gap-2 text-white  text-[18px] hover:bg-white/30 transition-all duration-300 hover:duration-300">
@@ -38,5 +37,6 @@ export default function DropdownMenuIcons() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+    
   );
 }

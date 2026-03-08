@@ -1,7 +1,6 @@
 //=================Hooks=================
-import useVideos from "@/Hooks/useVideos";
 import { useParams } from "react-router";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormatViews } from "@/Hooks/useformatViews";
 
 //=================Shadcn UI=================
@@ -19,6 +18,7 @@ import DropdownMenuIcons from "@/components/ui/DropDown";
 
 //=================Services=================
 import { fetchChannelLogo } from "@/Service/LogoApiFetching";
+import fetchSubscribeCount from "@/Service/fetchSubscribeCount";
 
 //=================React Icons=================
 import { SlLike } from "react-icons/sl";
@@ -26,35 +26,67 @@ import { SlDislike } from "react-icons/sl";
 import { TbShare3 } from "react-icons/tb";
 import { HiDownload } from "react-icons/hi";
 import { CiBookmark } from "react-icons/ci";
-import fetchSubscribeCount from "@/Service/fetchSubscribeCount";
 
 //===================Components==============
 import CommentSection from "./CommentSection";
-
-// import { Context } from "@/Context/Context";
-// import fetchComments from "@/Service/FetchComments";
-
-
+import fetchTheVideoData from "@/Service/FetchTheVideoData";
+import type Video from "@/Types/Videos";
+import SubscribeButton from "@/components/VideoSection/subscribeButton";
 
 export default function VideoPlayer() {
     //====================States======================
     const [open, setOpen] = useState<boolean>(false)
     const [channelLogo, setChannelLogo] = useState<string>();
     const [subscriberCount, setSubscriberCount] = useState<number>(0);
-    
-    const {videos , loading , error} = useVideos()  // بنجيب كل الفيديوهات عشان نقدر نفلتر ونجيب الفيديو الحالي بناءً على الـ ID من الـ URL
-    const formattedSubCount = useFormatViews(subscriberCount); // Assuming subscriber count is directly on the video object, adjust if it's nested under statistics
+    const [videoData, setVideoData] = useState<Video[]>([]);
+    //=================ROUTER============
     const param = useParams()
-
-    //=====================Context===================    
-    // const context = useContext(Context);
-    // // const {comment , SetComment } = context || {}
-        
     const videoId = param.id
-    const currentVideo = videos.find(v => v.id === videoId);
-    const formattedLikes = useFormatViews(currentVideo?.like); // Assuming like count is directly on the video object, adjust if it's nested under statistics
-    const formattedViews = useFormatViews(currentVideo?.viewCount); // Assuming viewCount is directly on the video object, adjust if it's nested under statistics
+    
+    const currentVideo = videoData.find(v => v.id === videoId);
     const channelId = currentVideo?.channelId;
+    const formattedLikes = useFormatViews(currentVideo?.like || 0) // Assuming like count is directly on the video object, adjust if it's nested under statistics
+    const formattedViews = useFormatViews(currentVideo?.viewCount || 0); // Assuming viewCount is directly on the video object, adjust if it's nested under statistics
+
+    const [subscribedChannels, setSubscribedChannels] = useState<string[]>(() =>{
+        try{
+            const storedChannels = localStorage.getItem('subscriptions');
+            const parsed = storedChannels ? JSON.parse(storedChannels) : []
+            return Array.isArray(parsed) ? parsed : []
+        }
+        catch{
+            return []
+        }
+    })
+    // هترجع true لو الـ id موجود، و false لو مش موجود
+    const isSubscribed = subscribedChannels.includes(channelId as string) 
+    const formattedSubCount = useFormatViews(subscriberCount); // Assuming subscriber count is directly on the video object, adjust if it's nested under statistics
+ 
+
+    // function handleSubscribe() {
+    //     if(!channelId) return;
+
+    //     if (isSubscribed) {
+    //     const updatedChannels = subscribedChannels.filter(id => id !== channelId) 
+        
+    //         localStorage.setItem('subscriptions', JSON.stringify(updatedChannels))
+    //         setSubscribedChannels(updatedChannels)
+    //     }else{
+    //         const updated = [...subscribedChannels, channelId];
+    //         setSubscribedChannels(updated);
+    //         localStorage.setItem('subscriptions', JSON.stringify(updated));
+    //     }
+    // }
+    
+    const currentIdVideo = videoData.find(v => v.id === videoId);
+    const channelIdVideo = currentIdVideo?.channelId;
+
+    function handleToggleSubscribe() {
+        if (!channelIdVideo) return;
+        const arrOfChannelId = channelIdVideo
+        localStorage.setItem('subscriptions' , JSON.stringify(arrOfChannelId))
+        setSubscribedChannels(arrOfChannelId as unknown as string[])
+    }
 
     //=====================Effects======================
     useEffect(() => {
@@ -63,7 +95,11 @@ export default function VideoPlayer() {
         setSubscriberCount(count);
     })
     },[channelId])
-    
+    useEffect(() => {
+        fetchTheVideoData(videoId || "").then((data: Video[]) => {
+        setVideoData(data);
+      });
+    }, [videoId]);
     useEffect(() => {
       if (!channelId) return;
       fetchChannelLogo(channelId).then((logo) => {
@@ -71,31 +107,35 @@ export default function VideoPlayer() {
       });
     }, [channelId]);
     
-    // if (!context) return null;
-    if (loading) return <h1>Loading...</h1>
-    if (error) return <h1>{error}</h1>
-
+    useEffect(() =>{
+        localStorage.setItem(`subscribe-${channelId}`, JSON.stringify(subscribe));
+    },[channelId , subscribe])
+    
     return(
         <>
-            {videos.filter(video => video.id === videoId).map((video) => (
+            {videoData.map((video) => (
                 <div key={video.id} className="flex flex-col  text-start">
-                    <iframe  src={`https://www.youtube.com/embed/${video.id}`} frameBorder="0" height={720} width={1525} allowFullScreen className="aspect-video rounded-md " allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                    <iframe  src={`https://www.youtube.com/embed/${videoId}`} frameBorder="0" height={720} width={1525} allowFullScreen className="aspect-video rounded-md " allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
                     <div className="flex flex-col items-start text-start">
                         <div className="flex flex-col mt-2 text-start w-full">
-                            <h1 className="text-white mt-2 text-2xl">{currentVideo.title}</h1>
+                            <h1 className="text-white mt-2 text-2xl">{video.title}</h1>
                             <div className="flex justify-between items-center w-full ">
                                 <div className=" flex  items-center justify-between w-full  gap-2">
                                     <div className="flex gap-2 items-center ">
                                         <img  src={channelLogo} alt="channel logo" className="rounded-[50%] h-10 w-10 mt-2 object-cover" />
                                         <div className="flex flex-col ">
-                                            <p className="text-white mt-2 w-65 text-[16px]">{currentVideo.channelTitle}</p>
+                                            <p className="text-white mt-2 w-65 text-[16px]">{video.channelTitle}</p>
                                             <p className="text-gray-400 text-sm">{formattedSubCount} subscribers</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center justify-between gap-4 w-full mt-2">
                                         <div className="flex   items-center gap-3 w-45">
                                             <button className="hover:bg-white/30 cursor-pointer duration-300 transition-all  hover:duration-300  w-15 h-8 rounded-full  text-white text-sm text-center bg-white/10  backdrop-blur-xl border-transparent">Join</button>
-                                            <button className="bg-white w-22 font-bold rounded-full h-9 cursor-pointer transition duration-300 hover:duration-300 hover:bg-gray-300 border-transparent">Subscribe</button>
+                                            {isSubscribed ? (
+                                                <button className="bg-white w-22 font-bold text-black rounded-full h-9 cursor-pointer transition duration-300 hover:duration-300 hover:bg-gray-300 border-transparent" onClick={handleToggleSubscribe}>Subscribe</button>
+                                            ):(
+                                                <SubscribeButton channelTitle={""} setSubscribeButton={undefined} setSubscribe={undefined} subscribe={undefined} />
+                                            )}
                                         </div>
                                         <div className="flex gap-2 w-full h-auto items-center justify-end">
                                             <div className="flex items-center justify-center w-38 h-10 rounded-full bg-white/10 backdrop-blur-xl ">
@@ -144,9 +184,9 @@ export default function VideoPlayer() {
                                     </CollapsibleTrigger>
                                     <CollapsibleContent className="flex flex-col items-start text-start gap-2 p-2.5 w-fit  pt-0 text-sm bg-transparent hover:bg-transparent rounded-md">
                                       <div className="w-240 text-gray-300">
-                                       {currentVideo.description}
+                                      {currentVideo?.description}
                                       </div>
-                                      {currentVideo.tags?.map((tag: string) => (
+                                      {currentVideo?.tag?.map((tag: string) => (
                                         <div key={tag} className="text-gray-300">
                                           {tag}
                                         </div>
@@ -154,7 +194,7 @@ export default function VideoPlayer() {
                                       <div className="flex flex-row items-start text-start gap-4 ">
                                         <img src={channelLogo} alt="channel logo" className="rounded-[50%] h-10 w-10 mt-2 object-cover" />
                                         <div className="flex flex-col ">
-                                          <p className="text-white mt-2 w-35 text-[16px]">{currentVideo.channelTitle}</p>
+                                          <p className="text-white mt-2 w-35 text-[16px]">{currentVideo?.channelTitle}</p>
                                           <p className="text-gray-400 text-sm">{formattedSubCount} subscribers</p>
                                         </div>
                                       </div>

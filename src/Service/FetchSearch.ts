@@ -14,7 +14,6 @@ export default async function fetchSearch(searchQuery: string) {
             thumbnails: item.snippet.thumbnails,
             channelUrl: `https://www.youtube.com/channel/${item.snippet.channelId}`,
             videoUrl: `https://www.youtube.com/watch?v=${item.id.videoId}`,
-            viewCount: item.statistics.viewCount,
         }
     })
 }

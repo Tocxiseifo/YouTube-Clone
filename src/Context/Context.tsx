@@ -9,6 +9,8 @@ interface Context {
     SetComment: React.Dispatch<React.SetStateAction<any[]>>
     search: string
     setSearch: React.Dispatch<React.SetStateAction<string>>
+    channelLogo: string
+    setChannelLogo: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const Context = createContext<Context | null>(null)
