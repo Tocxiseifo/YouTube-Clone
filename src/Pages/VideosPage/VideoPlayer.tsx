@@ -59,7 +59,8 @@ export default function VideoPlayer() {
         }
     })
     // هترجع true لو الـ id موجود، و false لو مش موجود
-    const isSubscribed = subscribedChannels.includes(channelId as string) 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const isSubscribed = [...subscribedChannels ,subscribedChannels.includes(channelId as string)] 
     const formattedSubCount = useFormatViews(subscriberCount); // Assuming subscriber count is directly on the video object, adjust if it's nested under statistics
  
 
@@ -108,8 +109,8 @@ export default function VideoPlayer() {
     }, [channelId]);
     
     useEffect(() =>{
-        localStorage.setItem(`subscribe-${channelId}`, JSON.stringify(subscribe));
-    },[channelId , subscribe])
+        localStorage.setItem(`subscribe-${channelId}`, JSON.stringify(isSubscribed));
+    },[channelId , isSubscribed])
     
     return(
         <>
