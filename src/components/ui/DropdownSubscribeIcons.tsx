@@ -18,16 +18,19 @@ import type React from "react";
 
 
   
-export default function DropdownSubscribeIcons({subscribeButton ,setSubscribeButton , , setSubscribe , subscribe} :{subscribeButton: any  ,setSubscribeButton: any , setSubscribe:any ,subscribe:any}) {
+export default function DropdownSubscribeIcons({subscribeButton ,setSubscribeButton,handleButton } :{subscribeButton: any,handleButton:any  ,setSubscribeButton: any ,}) {
   function handleUnsubscribe() {
     setSubscribeButton('unsubscribe');
-    setSubscribe?.(!subscribe);
+    handleButton()
+    setSubscribeButton('all')
   } 
+  
   return ( 
     <DropdownMenu >
         <DropdownMenuTrigger asChild>
-           <div className="w-full flex justify-evenly items-center gap-2">
-              {subscribeButton === 'all' ? <PiBellSimpleRingingBold size={25} /> : subscribeButton === 'personalize' ? <PiBellSimpleLight size={25} /> : subscribeButton === 'none' ? <TbBellOff size={25} /> : subscribeButton === 'unsubscribe' ? <button className="bg-white w-22 font-bold rounded-full h-9 cursor-pointer transition duration-300 hover:duration-300 hover:bg-gray-300 border-transparent" onClick={() => setSubscribe(!subscribe)}>Subscribe</button> : null}
+            <div className="flex font-bold cursor-pointer bg-white/10 backdrop-blur-xl rounded-full items-center justify-center w-full h-9 gap-5 text-white  text-[18px] hover:bg-white/30 transition-all duration-300 hover:duration-300 " onClick={() => setSubscribeButton('all')}>
+              {subscribeButton === 'all' ? <PiBellSimpleRingingBold size={25} /> : subscribeButton === 'personalize' ? <PiBellSimpleLight size={25} /> : subscribeButton === 'none' ? <TbBellOff size={25} /> : subscribeButton === 'unsubscribe' ?  null: null }
+              
               <IoIosArrowDown size={25} />
             </div>
         </DropdownMenuTrigger>

@@ -26,12 +26,14 @@ import { SlDislike } from "react-icons/sl";
 import { TbShare3 } from "react-icons/tb";
 import { HiDownload } from "react-icons/hi";
 import { CiBookmark } from "react-icons/ci";
+import { AiFillLike } from "react-icons/ai";
+import { BiSolidDislike } from "react-icons/bi";
 
 //===================Components==============
 import CommentSection from "./CommentSection";
 import fetchTheVideoData from "@/Service/FetchTheVideoData";
 import type Video from "@/Types/Videos";
-import SubscribeButton from "@/components/VideoSection/subscribeButton";
+import DropdownSubscribeIcons from "@/components/ui/DropdownSubscribeIcons";
 
 export default function VideoPlayer() {
     //====================States======================
@@ -39,6 +41,9 @@ export default function VideoPlayer() {
     const [channelLogo, setChannelLogo] = useState<string>();
     const [subscriberCount, setSubscriberCount] = useState<number>(0);
     const [videoData, setVideoData] = useState<Video[]>([]);
+    const [subscribeButton , setSubscribeButton] = useState<string>('all')    
+    const [likeButton , setLikeButton] = useState<boolean>(false)
+    const [dislikeButton , setDisLikeButton] = useState<boolean>(false)
     //=================ROUTER============
     const param = useParams()
     const videoId = param.id
@@ -60,33 +65,27 @@ export default function VideoPlayer() {
     })
     // هترجع true لو الـ id موجود، و false لو مش موجود
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const isSubscribed = [...subscribedChannels ,subscribedChannels.includes(channelId as string)] 
-    const formattedSubCount = useFormatViews(subscriberCount); // Assuming subscriber count is directly on the video object, adjust if it's nested under statistics
- 
-
-    // function handleSubscribe() {
-    //     if(!channelId) return;
-
-    //     if (isSubscribed) {
-    //     const updatedChannels = subscribedChannels.filter(id => id !== channelId) 
-        
-    //         localStorage.setItem('subscriptions', JSON.stringify(updatedChannels))
-    //         setSubscribedChannels(updatedChannels)
-    //     }else{
-    //         const updated = [...subscribedChannels, channelId];
-    //         setSubscribedChannels(updated);
-    //         localStorage.setItem('subscriptions', JSON.stringify(updated));
-    //     }
-    // }
-    
+    const isSubscribed = subscribedChannels.includes(channelId as string) 
+    const formattedSubCount = useFormatViews(subscriberCount); // Assuming subscriber count is directly on the video object, adjust if it's nested under statistics    
     const currentIdVideo = videoData.find(v => v.id === videoId);
     const channelIdVideo = currentIdVideo?.channelId;
 
+    //=====================Handlers======================
     function handleToggleSubscribe() {
         if (!channelIdVideo) return;
-        const arrOfChannelId = channelIdVideo
-        localStorage.setItem('subscriptions' , JSON.stringify(arrOfChannelId))
-        setSubscribedChannels(arrOfChannelId as unknown as string[])
+        const isAlreadySubscribe = subscribedChannels.includes(channelIdVideo);
+
+        let updateSubscribe:string[]
+        if (isAlreadySubscribe) {
+            updateSubscribe = subscribedChannels.filter(id => id !== channelIdVideo)
+            // setSubscribe(false)
+            console.log('unsubscribe' , updateSubscribe);
+        }else{
+            updateSubscribe = [...subscribedChannels , channelIdVideo]
+            console.log('subscribe' , channelIdVideo);
+        }
+        setSubscribedChannels(updateSubscribe)
+        localStorage.setItem('subscriptions' , JSON.stringify(updateSubscribe))
     }
 
     //=====================Effects======================
@@ -107,10 +106,8 @@ export default function VideoPlayer() {
         setChannelLogo(logo);
       });
     }, [channelId]);
-    
-    useEffect(() =>{
-        localStorage.setItem(`subscribe-${channelId}`, JSON.stringify(isSubscribed));
-    },[channelId , isSubscribed])
+
+    console.log(subscribedChannels);
     
     return(
         <>
@@ -132,21 +129,25 @@ export default function VideoPlayer() {
                                     <div className="flex items-center justify-between gap-4 w-full mt-2">
                                         <div className="flex   items-center gap-3 w-45">
                                             <button className="hover:bg-white/30 cursor-pointer duration-300 transition-all  hover:duration-300  w-15 h-8 rounded-full  text-white text-sm text-center bg-white/10  backdrop-blur-xl border-transparent">Join</button>
-                                            {isSubscribed ? (
-                                                <button className="bg-white w-22 font-bold text-black rounded-full h-9 cursor-pointer transition duration-300 hover:duration-300 hover:bg-gray-300 border-transparent" onClick={handleToggleSubscribe}>Subscribe</button>
-                                            ):(
-                                                <SubscribeButton channelTitle={""} setSubscribeButton={undefined} setSubscribe={undefined} subscribe={undefined} />
-                                            )}
+                                            {!isSubscribed ?
+                                                // <  className="bg-white/30  w-22 font-bold text-black rounded-full h-9 cursor-pointer transition duration-300 hover:duration-300 hover:bg-gray-300 border-transparent">
+                                                <button className="bg-white w-22 font-bold rounded-full h-9 cursor-pointer transition duration-300 hover:duration-300 hover:bg-gray-300 border-transparent" onClick={handleToggleSubscribe}>
+                                                    Subscribed
+                                                </button>
+                                                :
+                                                <DropdownSubscribeIcons subscribeButton={subscribeButton} setSubscribeButton={setSubscribeButton} handleButton={handleToggleSubscribe} />
+                                            }
                                         </div>
                                         <div className="flex gap-2 w-full h-auto items-center justify-end">
                                             <div className="flex items-center justify-center w-38 h-10 rounded-full bg-white/10 backdrop-blur-xl ">
-                                                <button className="flex cursor-pointer rounded-r-sm items-center justify-center w-28 h-full gap-2 text-white font-bold text-sm hover:bg-white/30 transition-all duration-300 hover:duration-300 rounded-full">
-                                                    <SlLike size={18} />
+                                                <button className="flex cursor-pointer rounded-r-sm items-center justify-center w-28 h-full gap-2 text-white font-bold text-sm hover:bg-white/30 transition-all duration-300 hover:duration-300 rounded-full" onClick={() => setLikeButton(!likeButton)}>
+                                                    {likeButton ? <AiFillLike size={22} /> : <SlLike size={22} />}
+                                                    
                                                     {formattedLikes}
                                                 </button>
                                                 <span className="text-white ">|</span>
-                                                <button className="text-white cursor-pointer rounded-l-sm mt-1 hover:bg-white/30 transition-all duration-300 hover:duration-300 rounded-full w-12 h-10 flex items-center justify-center">
-                                                    <SlDislike size={18} />
+                                                <button className="text-white cursor-pointer rounded-l-sm mt-1 hover:bg-white/30 transition-all duration-300 hover:duration-300 rounded-full w-12 h-10 flex items-center justify-center" onClick={() => setDisLikeButton(!dislikeButton)}>
+                                                    {dislikeButton ? <SlDislike size={22} /> : <BiSolidDislike size={22} />}
                                                 </button>
                                             </div>
                                             <div className="flex items-center justify-center w-28 h-10 rounded-full bg-white/10 backdrop-blur-xl">

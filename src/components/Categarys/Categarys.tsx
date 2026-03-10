@@ -59,7 +59,7 @@ const categories = [
 
 export default function Category() {
     return(
-        <div className="flex justify-center w-full items-center gap-3">
+        <div className="hidden lg:flex justify-center w-full items-center gap-3 ">
             {categories.map((category) => (
                 <div key={category.id} className='flex cursor-pointer hover:bg-white/30 duration-300 transition-all hover:duration-300 justify-center items-center w-24 h-8 text-white font-bold text-center bg-white/10  backdrop-blur-xl rounded-md'>
                     <span className="text-sm">{category.title}</span>

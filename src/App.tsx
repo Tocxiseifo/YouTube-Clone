@@ -17,9 +17,9 @@ function App() {
     <Context.Provider value={{comment,SetComment,search ,setSearch,channelLogo, setChannelLogo}}>
       <SidebarProvider>
         <NavBar />
-        <div className="min-h-screen w-full flex flex-row overflow-x-hidden ">
+        <div className="h-auto w-full flex flex-row md:overflow-x-hidden ">
           <AppRouters />
-        </div>npm
+        </div>
       </SidebarProvider>
     </Context.Provider>    
   )
