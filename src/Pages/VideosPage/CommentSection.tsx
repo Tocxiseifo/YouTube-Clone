@@ -98,7 +98,7 @@ export default function CommentSection({Id}: {Id?: string}) {
    
     return(
         <>
-            <section className="flex flex-col items-start mt-5 w-full h-auto">
+            <section className="flex flex-col items-start mt-5 w-full min-w-0 h-auto">
                 <span className="text-zinc-300 text-2xl"> {Number(commentsList.length) + comment.length } Comments </span>
                 <div className="flex mt-5  items-center w-full h-auto">
                     <div className="mr-6">
@@ -163,7 +163,7 @@ export default function CommentSection({Id}: {Id?: string}) {
                         <span className="text-white/35">{FormatDate(item.date)}</span>
                     </div>
                     <div className="flex flex-col items-start w-full h-auto">
-                        <p className="text-zinc-300 w-350">{item.text}</p>
+                        <p className="text-zinc-300 w-full max-w-[350px] break-words">{item.text}</p>
                         <div className="flex items-center text-zinc-300 gap-2 mt-2">
                             <SlLike size={15} className="cursor-pointer" onClick={() => SetLike(like + 1)}/>
                             <span className="text-gray-500">

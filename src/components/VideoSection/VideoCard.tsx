@@ -38,7 +38,7 @@ export default function VideoCard({ video }: { video?: Video }) {
     // Validation
     if (!video?.thumbnails?.standard?.url) return <Skeleton className="w-150 h-auto  rounded-md" />
     return (
-        <div className="w-150 hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">
+        <div className="w-full min-w-0 sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.67rem)] lg:w-150 hover:shadow-2xl hover:shadow-black duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent max-w-[600px] sm:max-w-none mx-auto sm:mx-0">
             <Link to={`/videos/${video.id}`} className="bg-transparent">
                 <img src={video.thumbnails?.standard?.url} className="rounded-md w-full object-cover" alt={video.title} />
             </Link>

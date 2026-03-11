@@ -112,13 +112,13 @@ export default function VideoPlayer() {
     return(
         <>
             {videoData.map((video) => (
-                <div key={video.id} className="flex flex-col  text-start">
-                    <iframe  src={`https://www.youtube.com/embed/${videoId}`} frameBorder="0" height={720} width={1525} allowFullScreen className="aspect-video rounded-md " allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                <div key={video.id} className="flex flex-col min-w-0 text-start w-full lg:flex-1">
+                    <iframe  src={`https://www.youtube.com/embed/${videoId}`} frameBorder="0" allowFullScreen className="aspect-video w-full min-w-0 rounded-md max-h-[50vh] sm:max-h-[60vh] md:max-h-none" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
                     <div className="flex flex-col items-start text-start">
                         <div className="flex flex-col mt-2 text-start w-full">
                             <h1 className="text-white mt-2 text-2xl">{video.title}</h1>
-                            <div className="flex justify-between items-center w-full ">
-                                <div className=" flex  items-center justify-between w-full  gap-2">
+                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-2">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2 min-w-0">
                                     <div className="flex gap-2 items-center ">
                                         <img  src={channelLogo} alt="channel logo" className="rounded-[50%] h-10 w-10 mt-2 object-cover" />
                                         <div className="flex flex-col ">
@@ -126,8 +126,8 @@ export default function VideoPlayer() {
                                             <p className="text-gray-400 text-sm">{formattedSubCount} subscribers</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center justify-between gap-4 w-full mt-2">
-                                        <div className="flex   items-center gap-3 w-45">
+                                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 w-full mt-2 min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-45">
                                             <button className="hover:bg-white/30 cursor-pointer duration-300 transition-all  hover:duration-300  w-15 h-8 rounded-full  text-white text-sm text-center bg-white/10  backdrop-blur-xl border-transparent">Join</button>
                                             {!isSubscribed ?
                                                 // <  className="bg-white/30  w-22 font-bold text-black rounded-full h-9 cursor-pointer transition duration-300 hover:duration-300 hover:bg-gray-300 border-transparent">
@@ -138,7 +138,7 @@ export default function VideoPlayer() {
                                                 <DropdownSubscribeIcons subscribeButton={subscribeButton} setSubscribeButton={setSubscribeButton} handleButton={handleToggleSubscribe} />
                                             }
                                         </div>
-                                        <div className="flex gap-2 w-full h-auto items-center justify-end">
+                                        <div className="flex flex-wrap gap-2 w-full h-auto items-center justify-start sm:justify-end min-w-0">
                                             <div className="flex items-center justify-center w-38 h-10 rounded-full bg-white/10 backdrop-blur-xl ">
                                                 <button className="flex cursor-pointer rounded-r-sm items-center justify-center w-28 h-full gap-2 text-white font-bold text-sm hover:bg-white/30 transition-all duration-300 hover:duration-300 rounded-full" onClick={() => setLikeButton(!likeButton)}>
                                                     {likeButton ? <AiFillLike size={22} /> : <SlLike size={22} />}
@@ -178,14 +178,14 @@ export default function VideoPlayer() {
                                   <Collapsible open={open} onOpenChange={setOpen} className="data-[state=open]:bg-transparent   bg-transparent hover:bg-transparent   rounded-md">
                                     <CollapsibleTrigger asChild>
                                       <Button variant="ghost" className="group  cursor-pointer bg-transparent hover:bg-transparent rounded-md hover:text-white w-full">
-                                        <div className="flex w-130 text-white">
+                                        <div className="flex w-full min-w-0 text-white">
                                             <p className="text-lg">{formattedViews} views</p>
                                         </div> 
                                         <ChevronDownIcon className=" ml-auto group-data-[state=open]:rotate-180" />
                                       </Button>
                                     </CollapsibleTrigger>
                                     <CollapsibleContent className="flex flex-col items-start text-start gap-2 p-2.5 w-fit  pt-0 text-sm bg-transparent hover:bg-transparent rounded-md">
-                                      <div className="w-240 text-gray-300">
+                                      <div className="w-65  md:w-full  text-gray-300 wrap-break-word">
                                       {currentVideo?.description}
                                       </div>
                                       {currentVideo?.tag?.map((tag: string) => (

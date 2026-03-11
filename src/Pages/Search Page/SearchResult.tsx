@@ -56,12 +56,12 @@ export default function SearchResult() {
     if (data.length === 0) return <Skeleton className="w-150 h-auto  rounded-md" />
     if(!contexts) return null
     return(
-        <div className="text-white flex flex-col w-full h-auto gap-5 ml-70">
+        <div className="text-white flex flex-col w-full min-w-0 h-auto gap-5 ml-0 sm:ml-4 md:ml-15 lg:ml-70 px-3 sm:px-4">
             {data.map((item) => {
             return(
-                <div key={item.id} className="w-full  flex items-start gap-5 duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">                    
-                    <Link to={`/videos/${(item.id as any)?.videoId || item.id}`} className="bg-transparent">
-                        <img src={item.thumbnails.high?.url} alt={item.title} className="rounded-md w-200 object-cover " />
+                <div key={item.id} className="w-full flex flex-col sm:flex-row items-start gap-3 sm:gap-5 duration-300 transition-all hover:duration-300 rounded-md cursor-pointer bg-transparent">                    
+                    <Link to={`/videos/${(item.id as any)?.videoId || item.id}`} className="bg-transparent w-full sm:w-auto shrink-0">
+                        <img src={item.thumbnails.high?.url} alt={item.title} className="rounded-md w-full sm:w-48 md:w-56 lg:w-200 object-cover max-w-full" />
                     </Link>
                     <div className="flex flex-col items-start w-full">
                         <h1 className="font-semibold text-zinc-300 line-clamp-2 text-2xl">{item.title}</h1>
