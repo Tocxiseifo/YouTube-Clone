@@ -20,4 +20,9 @@ export default interface Video {
     comment?:string | number
     tag:string[]
     description:string
+    statistics:{
+        viewCount:string | number
+        likeCount:string | number
+        dislikeCount:string | number
+    }
 }
